@@ -130,6 +130,12 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Farkle!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PoN-e4-1nj">
+                                <rect key="frame" x="40" y="473" width="220" height="29"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -141,6 +147,7 @@
                     </view>
                     <connections>
                         <outlet property="bankScoreLabel" destination="Hrc-mm-rvo" id="P4e-d2-uMY"/>
+                        <outlet property="farkleLabel" destination="PoN-e4-1nj" id="LbU-lk-Zf5"/>
                         <outlet property="fifthDieLabel" destination="a85-o9-W9f" id="xgi-JR-EE3"/>
                         <outlet property="firstDieLabel" destination="2Z4-Fx-ls0" id="N1V-jo-nlO"/>
                         <outlet property="fourthDieLabel" destination="NDM-mu-YAB" id="GBf-wO-wKC"/>

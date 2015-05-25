@@ -20,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet DieLabel *sixthDieLabel;
 @property NSMutableArray *dices;
 @property NSMutableArray *currentDiceSelection;
+@property NSMutableArray *hotDiceCombinations;
+@property NSArray *firstRollDice; //store array to check for Hot Dice
 @property (weak, nonatomic) IBOutlet UILabel *p1TotalScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *p1RoundScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bankScoreLabel;
@@ -27,6 +29,7 @@
 @property int roundScore;
 @property int totalScore;
 @property int countOfRolls;
+@property (weak, nonatomic) IBOutlet UILabel *farkleLabel;
 
 @end
 
@@ -36,7 +39,7 @@
     [super viewDidLoad];
 
     self.dices = [[NSMutableArray alloc] init];
-//    self.dicePositionLabels = [NSArray arrayWithObjects:self.firstDieLabel, self.secondDieLabel, self.thirdDieLabel, self.fourthDieLabel, self.fifthDieLabel, self.sixthDieLabel, nil];
+//    self.dicePositionLabels = [NSMutableArray arrayWithObjects:self.firstDieLabel, self.secondDieLabel, self.thirdDieLabel, self.fourthDieLabel, self.fifthDieLabel, self.sixthDieLabel, nil];
 
     //Set the delegate properties of all the DieLabels to the ViewController instance.
     self.firstDieLabel.delegate = self;
@@ -47,6 +50,10 @@
     self.sixthDieLabel.delegate = self;
 
     self.currentDiceSelection = [[NSMutableArray alloc] init];
+    self.hotDiceCombinations = [[NSMutableArray alloc] init];
+
+    //hide "Farkle" label until player Farkle
+    self.farkleLabel.hidden = YES;
 
     //initialize scores and count of roll
     self.p1TotalScoreLabel.text = @"0";
@@ -58,8 +65,14 @@
 }
 
 - (IBAction)onRollButtonPressed:(UIButton *)sender {
-    DieLabel *dieLabel = [[DieLabel alloc] init];
 
+//    self.firstRollDice = [[NSArray alloc] initWithObjects:self.firstDieLabel.text, self.secondDieLabel.text, self.thirdDieLabel.text,self.fourthDieLabel.text, self.fifthDieLabel.text, self.sixthDieLabel.text, nil];
+//
+//    if (self.countOfRolls == 0) {
+//
+//    }
+
+    DieLabel *dieLabel = [[DieLabel alloc] init];
     //***Test; calling DieLabel's method***
     //int firstNumber = [dieLabel getDieNumber]; //getDieNumber is the random generator
     //[self.firstDieLabel showDieNumber:firstNumber];
@@ -93,15 +106,14 @@
     //hint: You can fast enumerate through your IBOutletCollection of labels
     NSLog(@"Die Position: #1=%@, #2=%@, #3=%@, #4=%@, #5=%@, #6=%@", self.firstDieLabel.text, self.secondDieLabel.text, self.thirdDieLabel.text, self.fourthDieLabel.text, self.fifthDieLabel.text,self.sixthDieLabel.text);
 
+    self.countOfRolls += 1;
+
 }
 
 //-(void)calculateScore: (NSMutableArray *)score displayScoreOnLabel:(UILabel *)displayLabel{
-//
-//
 //}
 
 -(void)dieLabelSelector:(id)viewController didSelectDie:(DieLabel *)dieLabel{
-
 
     //Add selected die label to array
     if ([self.dices containsObject:dieLabel] == NO) {
@@ -111,7 +123,6 @@
         dieLabel.layer.borderWidth = 3;
         NSLog(@"Selected item: %@", dieLabel.text);
         NSLog(@"Dice array count: %i", (int)self.dices.count);
-
 
     } else if ([self.dices containsObject:dieLabel] == YES){
         [self.dices removeObject:dieLabel];
@@ -135,87 +146,92 @@
 //    for (int i = 0; i < self.dices.count; i++) {
 //        DieLabel *countString = [self.dices objectAtIndex:i];
 //        int count = [countString.text intValue];
-//        if (count == 1)
-//            countOne ++;
-//        if (count == 2)
-//            countOne ++;
-//        if (count == 3)
-//            countOne ++;
-//        if (count == 4)
-//            countOne ++;
-//        if (count == 5)
-//            countOne ++;
-//        if (count == 6)
-//            countOne ++;
 //    }
 
     
-        NSCountedSet *countedSet = [[NSCountedSet alloc] initWithArray:self.currentDiceSelection];
-        countOfOne = (int)[countedSet countForObject:@"1"];
-        countOfTwo = (int)[countedSet countForObject:@"2"];
-        countOfThree = (int)[countedSet countForObject:@"3"];
-        countOfFour = (int)[countedSet countForObject:@"4"];
-        countOfFive = (int)[countedSet countForObject:@"5"];
-        countOfSix = (int)[countedSet countForObject:@"6"];
-        NSLog(@"1s= %i, 2s= %i, 3s= %i, 4s= %i, 5s= %i, 6s= %i", countOfOne, countOfTwo, countOfThree, countOfFour, countOfFive, countOfSix);
+    NSCountedSet *countedSet = [[NSCountedSet alloc] initWithArray:self.currentDiceSelection];
+    countOfOne = (int)[countedSet countForObject:@"1"];
+    countOfTwo = (int)[countedSet countForObject:@"2"];
+    countOfThree = (int)[countedSet countForObject:@"3"];
+    countOfFour = (int)[countedSet countForObject:@"4"];
+    countOfFive = (int)[countedSet countForObject:@"5"];
+    countOfSix = (int)[countedSet countForObject:@"6"];
+    NSLog(@"1s= %i, 2s= %i, 3s= %i, 4s= %i, 5s= %i, 6s= %i", countOfOne, countOfTwo, countOfThree, countOfFour, countOfFive, countOfSix);
 
-//        NSLog(@"1s= %i, 2s= %i, 3s= %i, 4s= %i, 5s= %i, 6s= %i", countOne, countTwo
-//          , countThree, countFour, countFive, countSix);
+    if (countOfOne == 1) {
+        score += 100;
+    } else if (countOfOne == 2) {
+        score += 200;
+    } else if (countOfOne == 3) {
+        score += 1000;
+    } else if (countOfOne == 4) {
+        score += 1100;
+    } else if (countOfOne == 5) {
+        score += 1200;
+    } else if (countOfOne == 6) {
+        score += 2000;
+    }
 
-        if (countOfOne == 1) {
-            score += 100;
-        } else if (countOfOne == 2) {
-            score += 200;
-        } else if (countOfOne == 3) {
-            score += 1000;
-        } else if (countOfOne == 4) {
-            score += 1100;
-        } else if (countOfOne == 5) {
-            score += 1200;
-        } else if (countOfOne == 6) {
-            score += 2000;
-        }
+    if (countOfTwo == 3) {
+        score += 200;
+    } else if (countOfTwo == 6) {
+        score += 400;
+    }
 
-        if (countOfTwo == 3) {
-            score += 200;
-        } else if (countOfTwo == 6) {
-            score += 400;
-        }
+    if (countOfThree == 3) {
+        score += 300;
+    } else if (countOfThree == 6) {
+        score += 600;
+    }
 
-        if (countOfThree == 3) {
-            score += 300;
-        } else if (countOfThree == 6) {
-            score += 600;
-        }
+    if (countOfFour == 3) {
+        score += 400;
+    } else if (countOfFour == 6) {
+        score += 800;
+    }
 
-        if (countOfFour == 3) {
-            score += 400;
-        } else if (countOfFour == 6) {
-            score += 800;
-        }
+    if (countOfFive == 1) {
+        score += 50;
+    } else if (countOfFive == 2) {
+        score += 100;
+    } else if (countOfFive == 3) {
+        score += 500;
+    } else if (countOfFive == 4) {
+        score += 550;
+    } else if (countOfFive == 5) {
+        score += 600;
+    } else if (countOfFive == 6) {
+        score += 1000;
+    }
 
-        if (countOfFive == 1) {
-            score += 50;
-        } else if (countOfFive == 2) {
-            score += 100;
-        } else if (countOfFive == 3) {
-            score += 150;
-        } else if (countOfFive == 4) {
-            score += 200;
-        } else if (countOfFive == 5) {
-            score += 500;
-        } else if (countOfFive == 6) {
-            score += 550;
-        }
-
-        if (countOfSix == 3) {
-            score += 600;
-        } else if (countOfSix == 6) {
-            score += 1200;
-        }
+    if (countOfSix == 3) {
+        score += 600;
+    } else if (countOfSix == 6) {
+        score += 1200;
+    }
 
     self.roundScore = score;
     self.bankScoreLabel.text= [NSString stringWithFormat:@"%i", self.roundScore];
+
+    [self checkFarkle:self.roundScore];
+    [self checkHotDice:self.roundScore];
+}
+
+- (void)checkFarkle:(int)score{
+    if (self.dices.count == 0 && score == 0)
+    {
+        self.farkleLabel.text = @"FARKLE!";
+    }
+}
+
+
+- (void)checkHotDice:(int)firstScore{
+
+    //int totalDieLabelOnTurn =
+    if (self.dices.count == 6 && firstScore >= 350) //minimum combo score is (3) 5's & (3) 2's = 350
+    {
+        self.farkleLabel.text = @"HOT DICE!";
+    }
 }
 
 
@@ -224,11 +240,17 @@
 
     self.countOfRolls += 0; //increment count by one each time
 
+    //call the onRollButtonPressed method
+    [self performSelector: @selector(onRollButtonPressed:) withObject:self afterDelay: 0.0];
+
     self.totalScore = self.totalScore + self.roundScore;
     self.p1RoundScoreLabel.text = [NSString stringWithFormat:@"%i", self.roundScore];
     self.p1TotalScoreLabel.text = [NSString stringWithFormat:@"%i",self.totalScore];
 
-    
+    //check for Farkle and Hot Dice
+    [self checkFarkle:self.roundScore];
+    [self checkHotDice:self.roundScore];
+
     //reset current die selection
     [self.currentDiceSelection removeAllObjects];
 
@@ -236,46 +258,11 @@
     self.roundScore = 0;
     self.bankScoreLabel.text = @"0";
 
+    //disable tap gesture for selected dice labels
+    for (UILabel *selectedDieLabel in self.dices) {
+        [selectedDieLabel setUserInteractionEnabled:NO];
+    }
 }
-
-//-(UIButton *)createButtonWithTitle:(NSString *)title {
-//
-//    CGPoint point = CGPointMake(self.view.bounds.size.width, self.view.bounds.size.height);
-//    point.x -= 100;
-//    point.y -= 100;
-//
-//    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(point.x, point.y, 50, 50)];
-//    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [button setTitle:title forState:UIControlStateNormal];
-//    button.backgroundColor = [UIColor whiteColor];
-//    button.layer.borderColor = [UIColor blackColor].CGColor;
-//    button.layer.borderWidth = 1;
-//    button.layer.cornerRadius = button.bounds.size.height/2;
-//    [self.view addSubview:button];
-//
-//    return button;
-//}
-//
-//-(UILabel *)createLabelWithTitle:(NSString *)title withTextColor:(UIColor *)textColor withBackgroundColor:(UIColor *)backgroundColor{
-//
-//    CGPoint point = CGPointMake(self.view.bounds.size.width, self.view.bounds.size.height);
-//    point.x = point.x - 100;
-//    point.y = point.y - 100;
-//    //point.y -= 100;
-//    UILabel *label = [[UILabel alloc] init];
-//    //UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(point.x, point.y, 50, 50)];
-//    label.text = title;
-//    label.textColor = textColor;
-//    label.backgroundColor = backgroundColor;
-//    //label.backgroundColor = [UIColor whiteColor];
-//    label.layer.borderColor = [UIColor blackColor].CGColor;
-//    label.layer.borderWidth = 2;
-//    //label.layer.cornerRadius = label.bounds.size.height/2;
-//    [self.view addSubview:label];
-//
-//    return label;
-//
-//}
 
 
 
