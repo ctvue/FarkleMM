@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		F20B3D621B128CD800F530CC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F20B3D611B128CD800F530CC /* main.m */; };
 		F20B3D651B128CD800F530CC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F20B3D641B128CD800F530CC /* AppDelegate.m */; };
-		F20B3D681B128CD800F530CC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F20B3D671B128CD800F530CC /* ViewController.m */; };
+		F20B3D681B128CD800F530CC /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F20B3D671B128CD800F530CC /* GameViewController.m */; };
 		F20B3D6B1B128CD800F530CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F20B3D691B128CD800F530CC /* Main.storyboard */; };
 		F20B3D6D1B128CD800F530CC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F20B3D6C1B128CD800F530CC /* Images.xcassets */; };
 		F20B3D701B128CD800F530CC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F20B3D6E1B128CD800F530CC /* LaunchScreen.xib */; };
 		F20B3D7C1B128CD800F530CC /* FarkleNewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F20B3D7B1B128CD800F530CC /* FarkleNewTests.m */; };
+		F20B3D871B128DD000F530CC /* DieLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = F20B3D861B128DD000F530CC /* DieLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,14 +33,16 @@
 		F20B3D611B128CD800F530CC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F20B3D631B128CD800F530CC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F20B3D641B128CD800F530CC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		F20B3D661B128CD800F530CC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		F20B3D671B128CD800F530CC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F20B3D661B128CD800F530CC /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		F20B3D671B128CD800F530CC /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 		F20B3D6A1B128CD800F530CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F20B3D6C1B128CD800F530CC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F20B3D6F1B128CD800F530CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		F20B3D751B128CD800F530CC /* FarkleNewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FarkleNewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F20B3D7A1B128CD800F530CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F20B3D7B1B128CD800F530CC /* FarkleNewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FarkleNewTests.m; sourceTree = "<group>"; };
+		F20B3D851B128DD000F530CC /* DieLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DieLabel.h; sourceTree = "<group>"; };
+		F20B3D861B128DD000F530CC /* DieLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DieLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,10 +86,12 @@
 			children = (
 				F20B3D631B128CD800F530CC /* AppDelegate.h */,
 				F20B3D641B128CD800F530CC /* AppDelegate.m */,
-				F20B3D661B128CD800F530CC /* ViewController.h */,
-				F20B3D671B128CD800F530CC /* ViewController.m */,
+				F20B3D661B128CD800F530CC /* GameViewController.h */,
+				F20B3D671B128CD800F530CC /* GameViewController.m */,
 				F20B3D691B128CD800F530CC /* Main.storyboard */,
 				F20B3D6C1B128CD800F530CC /* Images.xcassets */,
+				F20B3D851B128DD000F530CC /* DieLabel.h */,
+				F20B3D861B128DD000F530CC /* DieLabel.m */,
 				F20B3D6E1B128CD800F530CC /* LaunchScreen.xib */,
 				F20B3D5F1B128CD800F530CC /* Supporting Files */,
 			);
@@ -219,9 +224,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F20B3D681B128CD800F530CC /* ViewController.m in Sources */,
+				F20B3D681B128CD800F530CC /* GameViewController.m in Sources */,
 				F20B3D651B128CD800F530CC /* AppDelegate.m in Sources */,
 				F20B3D621B128CD800F530CC /* main.m in Sources */,
+				F20B3D871B128DD000F530CC /* DieLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +422,7 @@
 				F20B3D811B128CD800F530CC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F20B3D821B128CD800F530CC /* Build configuration list for PBXNativeTarget "FarkleNewTests" */ = {
 			isa = XCConfigurationList;
@@ -424,6 +431,7 @@
 				F20B3D841B128CD800F530CC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
