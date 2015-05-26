@@ -12,8 +12,6 @@
 
 - (void)dieLabelSelector:(id)viewController didSelectDie:(UILabel *)dieLabel;
 
-//-(void)drinkTableViewCell:(id)cell didSelectImage:(UIImage *)image;
-//-(void)drinkTableViewCell:(id)cell didTapButton:(UIButton *)sender;
 
 @end
 
@@ -24,7 +22,7 @@
 
 - (void)showDieNumber:(int)num;
 - (int)getDieNumber;
-- (void)roll;
+//- (void)roll;
 
 
 @end

@@ -20,15 +20,20 @@
 @property (weak, nonatomic) IBOutlet DieLabel *sixthDieLabel;
 @property NSMutableArray *dices;
 @property NSMutableArray *currentDiceSelection;
-@property NSMutableArray *hotDiceCombinations;
 @property NSArray *firstRollDice; //store array to check for Hot Dice
 @property (weak, nonatomic) IBOutlet UILabel *p1TotalScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *p1RoundScoreLabel;
+@property (weak, nonatomic) IBOutlet UILabel *p2TotalScoreLabel;
+@property (weak, nonatomic) IBOutlet UILabel *p2RoundScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bankScoreLabel;
-
 @property int roundScore;
 @property int totalScore;
 @property int countOfRolls;
+@property (weak, nonatomic) IBOutlet UILabel *playerTurnLabel;
+@property BOOL isPlayer2Turn; //default is NO
+@property NSInteger playerID;
+@property BOOL turnOver;
+
 @property (weak, nonatomic) IBOutlet UILabel *farkleLabel;
 
 @end
@@ -50,14 +55,20 @@
     self.sixthDieLabel.delegate = self;
 
     self.currentDiceSelection = [[NSMutableArray alloc] init];
-    self.hotDiceCombinations = [[NSMutableArray alloc] init];
 
     //hide "Farkle" label until player Farkle
     self.farkleLabel.hidden = YES;
 
+    //set initial player turn label to player 1
+    self.playerID = 1;
+    self.playerTurnLabel.text = @"Player 1 turn";
+    //self.isPlayer2Turn = FALSE;
+
     //initialize scores and count of roll
     self.p1TotalScoreLabel.text = @"0";
     self.p1RoundScoreLabel.text = @"0";
+    self.p2TotalScoreLabel.text = @"0";
+    self.p2RoundScoreLabel.text = @"0";
     self.bankScoreLabel.text = @"0";
     self.countOfRolls = 0;
     self.roundScore = 0;
@@ -66,11 +77,13 @@
 
 - (IBAction)onRollButtonPressed:(UIButton *)sender {
 
-//    self.firstRollDice = [[NSArray alloc] initWithObjects:self.firstDieLabel.text, self.secondDieLabel.text, self.thirdDieLabel.text,self.fourthDieLabel.text, self.fifthDieLabel.text, self.sixthDieLabel.text, nil];
-//
+
+      //Check for Farkle on first roll
 //    if (self.countOfRolls == 0) {
 //
 //    }
+
+    self.countOfRolls += 0; //increment count by one each time
 
     DieLabel *dieLabel = [[DieLabel alloc] init];
     //***Test; calling DieLabel's method***
@@ -103,15 +116,60 @@
         [self.sixthDieLabel showDieNumber:[dieLabel getDieNumber]];
     }
 
-    //hint: You can fast enumerate through your IBOutletCollection of labels
     NSLog(@"Die Position: #1=%@, #2=%@, #3=%@, #4=%@, #5=%@, #6=%@", self.firstDieLabel.text, self.secondDieLabel.text, self.thirdDieLabel.text, self.fourthDieLabel.text, self.fifthDieLabel.text,self.sixthDieLabel.text);
 
-    self.countOfRolls += 1;
+    //disable tap gesture for selected dice labels
+    for (UILabel *selectedDieLabel in self.dices) {
+        [selectedDieLabel setUserInteractionEnabled:NO];
+    }
 
 }
 
-//-(void)calculateScore: (NSMutableArray *)score displayScoreOnLabel:(UILabel *)displayLabel{
-//}
+-(void)endTurn{
+    //self.isPlayer2Turn != self.isPlayer2Turn;
+//    if (self.isPlayer2Turn)
+    if (self.playerID == 1)
+    {
+        self.playerID = 2;
+        self.playerTurnLabel.text = @"Player 2 turn";
+
+    } else
+    {
+        self.playerID = 1;
+        self.playerTurnLabel.text = @"Player 1 turn";
+    }
+    [self resetDice];
+    self.turnOver = NO;
+    self.countOfRolls = 0;
+}
+
+- (void)resetDice
+{
+    for(DieLabel *element in self.view.subviews)
+    {
+        // check to see if the control is a DieLabel
+        if([element isKindOfClass:[DieLabel class]])
+            [element setUserInteractionEnabled:YES];
+            element.layer.borderColor = [UIColor clearColor].CGColor;
+            element.layer.borderWidth = 0;
+    }
+
+    [self.dices removeAllObjects];
+    [self.currentDiceSelection removeAllObjects];
+    self.countOfRolls = 0;
+    self.roundScore = 0;
+    self.totalScore = 0;
+
+}
+
+- (void)resetGame{
+    self.p1TotalScoreLabel = 0;
+    self.p2TotalScoreLabel = 0;
+    //self.isPlayer2Turn = NO;
+    self.playerID = 1;
+    self.countOfRolls = 0;
+    [self endTurn];
+}
 
 -(void)dieLabelSelector:(id)viewController didSelectDie:(DieLabel *)dieLabel{
 
@@ -123,6 +181,11 @@
         dieLabel.layer.borderWidth = 3;
         NSLog(@"Selected item: %@", dieLabel.text);
         NSLog(@"Dice array count: %i", (int)self.dices.count);
+        NSLog(@"Current selected dice array count: %i", (int)self.currentDiceSelection.count);
+//        //checking current dice selection
+//        for (NSString *dieValue in self.currentDiceSelection) {
+//            NSLog(@"Current die selection: %@", dieValue);
+//        }
 
     } else if ([self.dices containsObject:dieLabel] == YES){
         [self.dices removeObject:dieLabel];
@@ -131,6 +194,7 @@
         dieLabel.layer.borderWidth = 0;
         NSLog(@"Deselected items: %@", dieLabel);
         NSLog(@"Dice array count: %i", (int)self.dices.count);
+        NSLog(@"Current selected dice array count: %i", (int)self.currentDiceSelection.count);
     }
 
     //Count number of instances of Die numbers
@@ -228,33 +292,42 @@
 - (void)checkHotDice:(int)firstScore{
 
     //int totalDieLabelOnTurn =
-    if (self.dices.count == 6 && firstScore >= 350) //minimum combo score is (3) 5's & (3) 2's = 350
+    if (self.dices.count == 5 && firstScore >= 350) //minimum combo score is (3) 5's & (3) 2's = 350
     {
         self.farkleLabel.text = @"HOT DICE!";
     }
 }
 
 
-
 - (IBAction)onBankButtonPressed:(UIButton *)sender {
-
-    self.countOfRolls += 0; //increment count by one each time
 
     //call the onRollButtonPressed method
     [self performSelector: @selector(onRollButtonPressed:) withObject:self afterDelay: 0.0];
 
-    self.totalScore = self.totalScore + self.roundScore;
-    self.p1RoundScoreLabel.text = [NSString stringWithFormat:@"%i", self.roundScore];
-    self.p1TotalScoreLabel.text = [NSString stringWithFormat:@"%i",self.totalScore];
+    if (self.playerID == 1) {
+        NSInteger currentTotal = [self.p1TotalScoreLabel.text integerValue];
+        int p1Total = currentTotal + self.roundScore;
+        self.p1RoundScoreLabel.text = [NSString stringWithFormat:@"%i", self.roundScore];
+        self.p1TotalScoreLabel.text = [NSString stringWithFormat:@"%i", p1Total];
+        //self.turnOver = YES;
+    } else {
+        NSInteger currentTotal = [self.p2TotalScoreLabel.text integerValue];
+        int p2Total = currentTotal + self.roundScore;
+        self.p2RoundScoreLabel.text = [NSString stringWithFormat:@"%i", self.roundScore];
+        self.p2TotalScoreLabel.text = [NSString stringWithFormat:@"%i", p2Total];
+        //self.turnOver = YES;
+    }
 
     //check for Farkle and Hot Dice
     [self checkFarkle:self.roundScore];
     [self checkHotDice:self.roundScore];
 
-    //reset current die selection
+    //reset dices and current die selection array
     [self.currentDiceSelection removeAllObjects];
+    [self.dices removeAllObjects];
 
-    //reset round score and bank score to 0
+    //reset round score, bank score, and roll count
+    self.countOfRolls = 0;
     self.roundScore = 0;
     self.bankScoreLabel.text = @"0";
 
@@ -262,9 +335,9 @@
     for (UILabel *selectedDieLabel in self.dices) {
         [selectedDieLabel setUserInteractionEnabled:NO];
     }
+
+    [self endTurn]; //change turn to other player
 }
-
-
 
 
 

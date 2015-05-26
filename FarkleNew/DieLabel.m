@@ -19,7 +19,6 @@
         //set to as wide as die label's height and width
         self.dieImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
 
-        //self.dieImageView.frame = self.bounds;
         self.backgroundColor = [UIColor clearColor]; //clear background
         self.userInteractionEnabled = YES;  //enable user interaction and tap gesture on die labels
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onLabelTap)];
@@ -47,34 +46,16 @@
     return random;
 }
 
-- (void)roll {
-    int random = (arc4random() % 6) + 1;  //give from 1 to 6
-    self.text = [NSString stringWithFormat:@"%i", random];
-}
+//- (void)roll {
+//    int random = (arc4random() % 6) + 1;  //give from 1 to 6
+//    self.text = [NSString stringWithFormat:@"%i", random];
+//}
 
 -(void)onLabelTap{
     [self.delegate dieLabelSelector:self didSelectDie:self];
     //NSLog(@"Die Value: %@", self.text);
 }
 
-
-//- (id)initWithFrame:(CGRect)frame withNumber:(NSNumber *)number{
-//    self = [super init];
-//    self.frame = frame;
-//    self.diceNumber = number;
-//
-//    self.dicePictures = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"dice1"], [UIImage imageNamed:@"dice2"], [UIImage imageNamed:@"dice3"], [UIImage imageNamed:@"dice4"], [UIImage imageNamed:@"dice5"], [UIImage imageNamed:@"dice6"], nil];
-//    NSInteger index = [number integerValue] - 1;
-//    self.diceImage = [[UIImageView alloc] initWithImage:[self.dicePictures objectAtIndex:index]];
-//    self.backgroundColor = [UIColor clearColor];
-//    self.diceImage.frame = self.bounds;
-//    [self addSubview:self.diceImage];
-//    self.userInteractionEnabled = YES;
-//
-//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(labelTap)];
-//    [self addGestureRecognizer:tapGesture];
-//    return self;
-//}
 
 
 @end
